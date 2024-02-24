@@ -1,11 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Kdam+Thmor+Pro&display=swap');
 
 .text-animation {
-    font-size: 6em;
+    font-size: 3.5em;
     text-transform: uppercase;
     font-family:'Bebas Neue', bold;
     font-weight: 900;
