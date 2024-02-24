@@ -12,7 +12,7 @@ import Select from 'react-select';
 import '../Modal.css';
 import DropDown from '../components/Dropdown';
 
-const API_KEY = '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';
+const API_KEY = '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';
 const openai = new OpenAI({
     apiKey: API_KEY,
     dangerouslyAllowBrowser: true,
@@ -23,14 +23,18 @@ export default function Homepage() {
     const [url, setUrl] = useState([]);
     const [urlTraverse, setUrlTraverse] = useState(-1);
     const [buttonText, setButtonText] = useState('Talk to me!');
-    const [story, setStory] = useState([]);
+    const [story, setStory] = useState([])
     const [count, setCount] = useState(0);
     const [subtitles, setSubtitles] = useState('');
     const [lastIndex, setLastIndex] = useState(0);
     const [start, setStart] = useState(0);
-    const [selectedOption, setSelectedOption] = useState('en-US');
+    const [selectedOption, setSelectedOption] = useState('null');
     const [modal, setModal] = useState(true);
     const [title, setTitle] = useState('');
+    var pinyin = require("chinese-to-pinyin");
+    const handleSelectedOption = (option) => {
+        setSelectedOption(option);
+      };
     let {
         transcript,
         resetTranscript,
@@ -84,12 +88,13 @@ export default function Homepage() {
 
     const buttonClickHandler = () => {
         if (buttonText === 'Talk to me!') {
+            console.log(selectedOption);
             setButtonText("I'm listening...");
             resetTranscript();
             console.log('listening start');
             SpeechRecognition.startListening({
                 continuous: true,
-                language: selectedOption.value,
+                language: selectedOption,
             });
         } else {
             setButtonText('Talk to me!');
@@ -125,6 +130,7 @@ export default function Homepage() {
         console.log('loading..');
         const text = story[count];
         setCount(count + 1);
+        if (selectedOption.value=== 'zh-CN'){text = pinyin(text);}
         console.log(text);
         const response = await openai.images.generate({
             model: 'dall-e-2',

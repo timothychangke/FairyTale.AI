@@ -2,7 +2,7 @@ import { FiChevronDown } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
-const DropDown = ({ options, setSelectedOption }) => {
+const DropDown = ({ options, setSelectedOption}) => {
     const [open, setOpen] = useState(false);
     return (
         <div
@@ -24,15 +24,15 @@ const DropDown = ({ options, setSelectedOption }) => {
                     variants={wrapperVariants}
                     style={{ originY: 'top', translateX: '-50%' }}
                     className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] right-[-78%] w-48 overflow-hidden "
-                    onChange={(e) => setSelectedOption(e.target.value)}
                 >
                     {options.map((val) => (
                         <Option
                             setOpen={setOpen}
+                            setSelectedOption={setSelectedOption}
                             text={val.label}
                             key={val.label}
                             value={val.value}
-                        />
+                            />
                     ))}
                 </motion.ul>
             </motion.div>
@@ -40,11 +40,16 @@ const DropDown = ({ options, setSelectedOption }) => {
     );
 };
 
-const Option = ({ text, setOpen }) => {
+const Option = ({ text, setOpen, setSelectedOption,value }) => {
+    const handleClick = () => {
+        console.log("Selected option:", value); // Debugging
+        setSelectedOption(value);
+        setOpen(false);
+    };
     return (
         <motion.li
             variants={itemVariants}
-            onClick={() => setOpen(false)}
+            onClick={handleClick}
             className="flex items-center gap-1 w-full p-1 text-xs font-medium whitespace-nowrap rounded-md hover:bg-indigo-100 text-slate-700 hover:text-indigo-500 transition-colors cursor-pointer"
         >
             <span>{text}</span>
