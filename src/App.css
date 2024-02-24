@@ -118,14 +118,23 @@
   max-width: 100vw; /* Adjust max-width as needed */
   z-index: 2  ; /* Ensure buttons appear above other content */
 }
+.flex {
+  
+  justify-content: space-between; /* Distribute items evenly along the main axis */
+  align-items: center; /* Align items vertically */
+}
 
 .imageContainer {
-  position: absolute;
-  top: 40vh; /* Adjust to vertically center the image */
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1; /* Ensure image appears above other content */
+  flex: 1; /* Make the image container flexible to occupy remaining space */
+  margin: 0 10px; /* Add margin between the image and arrows */
 }
+/*.imageContainer {
+  position: fixed;
+  top: 20vh; /* Adjust to vertically center the image */
+  /*left: 50%;
+  transform: translateX(-50%);
+  z-index: 1; /* Ensure image appears above other content 
+}*/
 
 .footerContainer {
   position: fixed;

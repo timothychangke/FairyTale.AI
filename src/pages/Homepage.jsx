@@ -12,7 +12,7 @@ import Select from 'react-select';
 import '../Modal.css';
 import DropDown from '../components/Dropdown';
 
-const API_KEY = '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';
+const API_KEY = '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';
 const openai = new OpenAI({
     apiKey: API_KEY,
     dangerouslyAllowBrowser: true,
@@ -28,7 +28,7 @@ export default function Homepage() {
     const [subtitles, setSubtitles] = useState('');
     const [lastIndex, setLastIndex] = useState(0);
     const [start, setStart] = useState(0);
-    const [selectedOption, setSelectedOption] = useState('null');
+    const [selectedOption, setSelectedOption] = useState('en-US');
     const [modal, setModal] = useState(true);
     const [title, setTitle] = useState('');
     var pinyin = require("chinese-to-pinyin");
@@ -146,13 +146,16 @@ export default function Homepage() {
         setUrlTraverse(urlTraverse + 1);
     }
 
-    const goBack = () => {
+    function goBack () {
         const toSet = urlTraverse > 1 ? urlTraverse - 1 : 0;
         setUrlTraverse(toSet);
+        console.log("hi")
     };
-    const goForward = () => {
+
+    function goForward() {
+        console.log(url)
         const toSet =
-            urlTraverse < url.length ? urlTraverse + 1 : url.length - 1;
+            urlTraverse < url.length ? urlTraverse + 1 : urlTraverse;
         setUrlTraverse(toSet);
     };
 
@@ -197,7 +200,7 @@ export default function Homepage() {
                             </button>
                         </div>
                         {urlTraverse != -1 && (
-                            <div className='flex'>
+                            <div className='flex flex-row'>
                                 <div >
                                     <span
                                         onClick={goBack}
@@ -226,7 +229,7 @@ export default function Homepage() {
                             </div>
                         )}
 
-                        <div className="mt-auto max-w-full m-0 pt-96">
+                        <div className="mt-auto max-w-full m-0 pt-auto">
                             {subtitles}
                         </div>
                         <div style={{ marginTop: '0px' }} className="mt-auto">
