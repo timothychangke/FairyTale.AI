@@ -1,5 +1,4 @@
 import { React, useState, useEffect } from 'react';
-import logo from '../assets/logo.png';
 import footer from '../assets/footer.png';
 import '../App.css';
 import GSAPAnimation from '../components/GSAPAnimation';
@@ -15,13 +14,24 @@ import Select from 'react-select';
 
 
 export default function Homepage() {
+    const SUBTITLE_MAX_LENGTH = 30;
     const [buttonState, setButtonState] = useState('button');
     const [buttonText, setButtonText] = useState('Talk to me!');
-    const {
+    const [subtitles, setSubtitles] = useState('');
+    const [lastIndex, setLastIndex] = useState(0);
+    let {
         transcript,
         resetTranscript,
         browserSupportsSpeechRecognition,
+        finalTranscript,
     } = useSpeechRecognition();
+
+    useEffect(() => {
+        if (finalTranscript.length > SUBTITLE_MAX_LENGTH + lastIndex) {
+            setLastIndex(finalTranscript.length);
+        }
+        setSubtitles(transcript.slice(lastIndex));
+    }, [transcript, subtitles, finalTranscript]);
     const options = [
         { value: 'en-US', label: 'English' },
         { value: 'zh-CN', label: 'Chinese 中文' },
@@ -42,18 +52,9 @@ export default function Homepage() {
                 continuous: true,
                 language: selectedOption.value,
             });
-
-            
-        
         } else {
             setButtonText('Talk to me!');
-
             SpeechRecognition.stopListening();
-            /*settranslated([...translatedtranscript, {'role': 'user', 'content':transcript}]);*/
-            console.log(transcript)
-                /*makeAPIRequest({'role': 'user', 'content':transcript});
-             
-                response_txt = response_txt.concat(translatedtranscript);*/
         }
         setButtonState('button animate');
         setTimeout(() => {
@@ -86,8 +87,11 @@ export default function Homepage() {
                             </span>
                         </button>
                     </div>
+                    <div className="mt-auto max-w-full m-0 pt-96">
+                        {subtitles}
+                    </div>
                     <div className="mt-auto">
-                        <img src={footer} className="max-w-full m-0 p-0" />
+                        <img src={footer} className="max-w-full m-0 p-0 " />
                     </div>
                     <div className="bg-[#a8d0fa]">
                     <Select  className='color-[#a8d0fa] text-black'
