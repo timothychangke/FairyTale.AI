@@ -94,3 +94,44 @@
       background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
     }
   }
+
+
+  .container {
+    width: 100vw;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
+}
+
+
+.buttonContainer {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: space-between;
+  width: 100vw; /* Adjust width as needed */
+  max-width: 100vw; /* Adjust max-width as needed */
+  z-index: 2  ; /* Ensure buttons appear above other content */
+}
+
+.imageContainer {
+  position: absolute;
+  top: 40vh; /* Adjust to vertically center the image */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1; /* Ensure image appears above other content */
+}
+
+.footerContainer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1; /* Ensure footer appears above other content */
+  width: 100vw;
+}

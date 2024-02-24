@@ -12,7 +12,7 @@ import Select from 'react-select';
 import '../Modal.css';
 import DropDown from '../components/Dropdown';
 
-const API_KEY = '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';
+const API_KEY = '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';
 const openai = new OpenAI({
     apiKey: API_KEY,
     dangerouslyAllowBrowser: true,
@@ -68,6 +68,7 @@ export default function Homepage() {
             setStart(finalTranscript.length);
             generateImage();
         }
+        console.log(story);
     }, [finalTranscript, story]);
 
     const options = [
@@ -112,12 +113,11 @@ export default function Homepage() {
             size: '1024x1024',
         });
         setUrl([...url, response.data[0].url.toString()]);
-        console.log(response.data[0].url);
+        console.log(response.data[0].url, urlTraverse);
         setUrlTraverse(urlTraverse + 1);
     }
 
     const toggleModal = () => {
-        titleImage();
         setModal(!modal);
     };
 
@@ -135,6 +135,7 @@ export default function Homepage() {
             n: 1,
             size: '1024x1024',
         });
+        console.log(response.data[0].url, urlTraverse);
         setUrl([...url, response.data[0].url]);
         setUrlTraverse(urlTraverse + 1);
     }
@@ -147,6 +148,17 @@ export default function Homepage() {
         const toSet =
             urlTraverse < url.length ? urlTraverse + 1 : url.length - 1;
         setUrlTraverse(toSet);
+    };
+
+    const imageStyles = {
+        maxHeight: '40vh',
+        width: 'auto',
+        margin: '0 auto', // Center the image horizontally
+    };
+
+    const arrowStyles = {
+        fontSize: '2rem', // Adjust the size of arrows
+        cursor: 'pointer', // Add cursor pointer for better UX
     };
 
     return (
@@ -178,26 +190,46 @@ export default function Homepage() {
                                 </span>
                             </button>
                         </div>
+                        {urlTraverse != -1 && (
+                            <div className='flex'>
+                                <div >
+                                    <span
+                                        onClick={goBack}
+                                        style={arrowStyles}
+                                        class="material-symbols-outlined"
+                                    >
+                                        arrow_back_ios
+                                    </span>
+                                </div>
+                                <div className="imageContainer">
+                                    <img
+                                        src={url[urlTraverse]}
+                                        style={imageStyles}
+                                        alt="Story Image"
+                                    />
+                                </div>
+                                <div >
+                                    <span
+                                        onClick={goForward}
+                                        class="material-symbols-outlined"
+                                        style={arrowStyles}
+                                    >
+                                        arrow_forward_ios
+                                    </span>
+                                </div>
+                            </div>
+                        )}
+
                         <div className="mt-auto max-w-full m-0 pt-96">
                             {subtitles}
                         </div>
-                        <div className="mt-auto">
+                        <div style={{ marginTop: '0px' }} className="mt-auto">
                             <img
                                 src={footer}
                                 className="max-w-full m-0 p-0 "
                                 alt="footer"
                             />
                         </div>
-                        {/* <div className="bg-[#a8d0fa]">
-                            <Select
-                                className="color-[#a8d0fa] text-black"
-                                defaultValue={options[0]}
-                                onChange={setSelectedOption}
-                                options={options}
-                                isSearchable={true}
-                                placeholder={'English'}
-                            ></Select>
-                        </div> */}
                     </div>
                 </div>
                 {modal && (
@@ -231,50 +263,16 @@ export default function Homepage() {
                             </div>
 
                             <button
-                                onClick={toggleModal}
+                                onClick={() => {
+                                    toggleModal();
+                                    titleImage();
+                                }}
                                 className="bg-white hover:opacity-90 transition-opacity text-indigo-600 font-semibold w-full py-2 rounded"
                                 type="submit"
                             >
                                 Tell me a story!
                             </button>
                         </div>
-
-                        {urlTraverse != -1 && (
-                            <div style={{ height: '40px' }}>
-                                <span
-                                    onClick={goBack}
-                                    class="material-symbols-outlined"
-                                >
-                                    arrow_back_ios
-                                </span>
-                                <img
-                                    src={url[urlTraverse]}
-                                    style={{ height: '70vh' }}
-                                />
-                                <span
-                                    onClick={goForward}
-                                    class="material-symbols-outlined"
-                                >
-                                    arrow_forward_ios
-                                </span>
-                            </div>
-                        )}
-                        <div className="mt-auto max-w-full m-0 pt-96">
-                            {subtitles}
-                        </div>
-                        {/* <div className="mt-auto">
-                            <img src={footer} className="max-w-full m-0 p-0 " />
-                        </div> */}
-                        {/* <div className="bg-[#a8d0fa]">
-                            <Select
-                                className="color-[#a8d0fa] text-black"
-                                defaultValue={options[0]}
-                                onChange={setSelectedOption}
-                                options={options}
-                                isSearchable={true}
-                                placeholder={'English'}
-                            ></Select>
-                        </div> */}
                     </div>
                 )}
             </div>
