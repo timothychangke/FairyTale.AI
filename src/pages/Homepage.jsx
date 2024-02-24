@@ -5,34 +5,31 @@ import GSAPAnimation from '../components/GSAPAnimation';
 import { AiOutlineAudio } from 'react-icons/ai';
 import { AiFillAudio } from 'react-icons/ai';
 import OpenAI from 'openai';
-import Queue from '../queue/queue';
-
-const API_KEY = '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';
-const openai = new OpenAI({
-    apiKey: API_KEY,
-    dangerouslyAllowBrowser: true,
-});
-import SpeechRecognition, {
-    useSpeechRecognition,
-} from 'react-speech-recognition';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Select from 'react-select';
+import SpeechRecognition, {
+    useSpeechRecognition,
+} from 'react-speech-recognition';
 
+const API_KEY = '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';
+const openai = new OpenAI({
+    apiKey: API_KEY,
+    dangerouslyAllowBrowser: true,
+});
 
 export default function Homepage() {
     const SUBTITLE_MAX_LENGTH = 30;
     const [buttonState, setButtonState] = useState('button');
-    const [image, setImage] = useState(null);
+    const [url, setUrl] = useState([]);
+    const [urlTraverse, setUrlTraverse] = useState(-1);
     const [buttonText, setButtonText] = useState('Talk to me!');
-    const [story,setStory] = useState([
-        //"나는 행복한 소녀입니다. 난 클럽에 가서 남자들과 어울리는 걸 좋아해"
-        "Little Red Riding Hood lived in a wood with her mother. One day Little Red Riding Hood went to visit her granny.","She had a nice cake in her basket. On her way Little Red Riding Hood met a wolf.","‘Hello!’ said the wolf. ‘Where are you going?’ ‘I’m going to see my grandmother. She lives in a house behind those trees.’","The wolf ran to Granny’s house and ate Granny up. He got into Granny’s bed.","A little later, Little Red Riding Hood reached the house. She looked at the wolf. ‘Granny, what big eyes you have!’ ‘All the better to see you with!’ said the wolf."
-    ])
-    const [count, setCount] = useState(0)
+    const [story, setStory] = useState([]);
+    const [count, setCount] = useState(0);
     const [subtitles, setSubtitles] = useState('');
     const [lastIndex, setLastIndex] = useState(0);
+    const [start, setStart] = useState(0);
     let {
         transcript,
         resetTranscript,
@@ -46,13 +43,27 @@ export default function Homepage() {
         }
         setSubtitles(transcript.slice(lastIndex));
     }, [transcript, subtitles, finalTranscript]);
+
+    useEffect(() => {
+        console.log(finalTranscript);
+        if (finalTranscript.length - start > 100) {
+            setStory([
+                ...story,
+                finalTranscript.slice(start, finalTranscript.length),
+            ]);
+            setStart(finalTranscript.length);
+            generateImage();
+        }
+        console.log(story);
+    }, [finalTranscript, story]);
+
     const options = [
         { value: 'en-US', label: 'English' },
         { value: 'zh-CN', label: 'Chinese 中文' },
-        { value: 'ko', label: 'Korean 한국어' }
-      ]
-      
-      const [selectedOption, setSelectedOption] = useState('en-US');
+        { value: 'ko', label: 'Korean 한국어' },
+    ];
+
+    const [selectedOption, setSelectedOption] = useState('en-US');
 
     if (!browserSupportsSpeechRecognition) {
         return <span>Browser doesn't support speech recognition.</span>;
@@ -76,18 +87,48 @@ export default function Homepage() {
         }, 1000);
     };
 
-    async function generateImage() {
-        const text = story[count];
-        setCount(count + 1);
-        console.log(text)
+    async function titleImage() {
+        const title = 'Humpty Dumpty';
         const response = await openai.images.generate({
-            model: 'dall-e-3',
-            prompt: `Create cartoon image for childrens' viewing aide during story telling of the following text.
+            model: 'dall-e-2',
+            prompt: `
+            Create a cartoon image for childrens' viewing of {title}. Each hue is carefully chosen to evoke feelings of happiness, warmth, and wonder, captivating young hearts with their vibrant allure
+            Amidst the vibrancy and color, the characters retain their essence while being immersed in the joyous world of {title}.
+            title: ${title}`,
+            n: 1,
+            size: '1024x1024',
+        });
+        setUrl([...url, response.data[0].url.toString()]);
+        console.log(url);
+        setUrlTraverse(urlTraverse + 1);
+    }
+
+    async function generateImage() {
+        console.log('loading..');
+        const text = story[count];
+        const title = 'Winnie the Pooh';
+        setCount(count + 1);
+        console.log(text);
+        const response = await openai.images.generate({
+            model: 'dall-e-2',
+            prompt: `Create a cartoon image for childrens' viewing of {title} based on the {text}.Each hue is carefully chosen to evoke feelings of happiness, warmth, and wonder, captivating young hearts with their vibrant allure
+            Amidst the vibrancy and color, the characters retain their essence while being immersed in the joyous world of {title}.
+            title: ${title}
             text: ${text}`,
             n: 1,
             size: '1024x1024',
         });
-        setImage(response.data[0].url);
+        setUrl([...url, response.data[0].url]);
+        setUrlTraverse(urlTraverse + 1);
+    }
+
+    const goBack = () => {
+        const toSet = urlTraverse > 1 ? urlTraverse - 1 : 0;
+        setUrlTraverse(toSet);
+    };
+    const goForward = () =>{
+        const toSet = urlTraverse < url.length ? urlTraverse + 1 : url.length -1
+        setUrlTraverse(toSet)
     }
 
     return (
@@ -98,6 +139,7 @@ export default function Homepage() {
                         <GSAPAnimation />
                     </div>
                     <div>
+                        <button onClick={titleImage}>Click</button>
                         <button
                             onClick={buttonClickHandler}
                             class={buttonState}
@@ -116,29 +158,41 @@ export default function Homepage() {
                             </span>
                         </button>
                     </div>
-                    <div>
-                        <button onClick={generateImage}>
-                            <span>Try</span>
-                        </button>
-                    </div>
-                    {image && <img src={image} style={{height : "60vh"}} />}
+                    {urlTraverse != -1 && (
+                        <div style={{ height: '40px' }}>
+                            <span
+                                onClick={goBack}
+                                class="material-symbols-outlined"
+                            >
+                                arrow_back_ios
+                            </span>
+                            <img
+                                src={url[urlTraverse]}
+                                style={{ height: '70vh'}}
+                            />
+                            <span
+                                onClick={goForward}
+                                class="material-symbols-outlined"
+                            >
+                                arrow_forward_ios
+                            </span>
+                        </div>
+                    )}
                     <div className="mt-auto max-w-full m-0 pt-96">
                         {subtitles}
                     </div>
-
-                    <div className="mt-auto">
-                        <img src={footer} className="max-w-full m-0 p-0 " />
+                    <div  className="mt-auto">
+                        <img src={footer}  className="max-w-full m-0 p-0 " />
                     </div>
                     <div className="bg-[#a8d0fa]">
-                    <Select  className='color-[#a8d0fa] text-black'
-                        defaultValue={options[0]} 
-                        onChange={setSelectedOption} 
-                        options={options}
-                        isSearchable = {true} 
-                        placeholder  ={'English'}>
-
-                    </Select>
-
+                        <Select
+                            className="color-[#a8d0fa] text-black"
+                            defaultValue={options[0]}
+                            onChange={setSelectedOption}
+                            options={options}
+                            isSearchable={true}
+                            placeholder={'English'}
+                        ></Select>
                     </div>
                 </div>
             </div>
