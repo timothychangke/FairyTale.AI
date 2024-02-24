@@ -8,6 +8,11 @@ import { AiFillAudio } from 'react-icons/ai';
 import SpeechRecognition, {
     useSpeechRecognition,
 } from 'react-speech-recognition';
+import Dropdown from 'react-bootstrap/Dropdown';
+import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Select from 'react-select';
+
 
 export default function Homepage() {
     const [buttonState, setButtonState] = useState('button');
@@ -17,7 +22,14 @@ export default function Homepage() {
         resetTranscript,
         browserSupportsSpeechRecognition,
     } = useSpeechRecognition();
-    
+    const options = [
+        { value: 'en-US', label: 'English' },
+        { value: 'zh-CN', label: 'Chinese 中文' },
+        { value: 'ko', label: 'Korean 한국어' }
+      ]
+      
+      const [selectedOption, setSelectedOption] = useState('en-US');
+
     if (!browserSupportsSpeechRecognition) {
         return <span>Browser doesn't support speech recognition.</span>;
     }
@@ -28,9 +40,9 @@ export default function Homepage() {
             console.log('listening start');
             SpeechRecognition.startListening({
                 continuous: true,
-                language: 'en-US',
+                language: selectedOption.value,
             });
-           
+
             
         
         } else {
@@ -70,6 +82,17 @@ export default function Homepage() {
                     </div>
                     <div className="mt-auto">
                         <img src={footer} className="max-w-full m-0 p-0" />
+                    </div>
+                    <div className="bg-[#a8d0fa]">
+                    <Select  className='color-[#a8d0fa] text-black'
+                        defaultValue={options[0]} 
+                        onChange={setSelectedOption} 
+                        options={options}
+                        isSearchable = {true} 
+                        placeholder  ={'English'}>
+
+                    </Select>
+
                     </div>
                 </div>
             </div>
