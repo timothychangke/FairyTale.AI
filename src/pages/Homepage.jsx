@@ -2,7 +2,7 @@ import { React, useState, useEffect } from 'react';
 import logo from '../assets/logo.png';
 import footer from '../assets/footer.png';
 import '../App.css';
-import GSAPAnimation from './GASPAnimation';
+import GSAPAnimation from '../components/GSAPAnimation';
 import { AiOutlineAudio } from 'react-icons/ai';
 import { AiFillAudio } from 'react-icons/ai';
 import SpeechRecognition, {
@@ -65,7 +65,13 @@ export default function Homepage() {
                             ) : (
                                 <AiFillAudio className="size-5" />
                             )}
-                            <span className={buttonText == 'Talk to me!' ? 'pl-2': ''}>{buttonText}</span>
+                            <span
+                                className={
+                                    buttonText == 'Talk to me!' ? 'pl-2' : ''
+                                }
+                            >
+                                {buttonText}
+                            </span>
                         </button>
                     </div>
                     <div className="mt-auto">

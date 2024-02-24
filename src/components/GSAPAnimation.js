@@ -7,9 +7,9 @@ export default function GASPAnimation() {
     useEffect(() => {
         let textAnimation = gsap.timeline();
         textAnimation.from('.word', {
-            y: -100,
+            y: -80,
             stagger: {
-                each: 0.1,
+                each: 0.08,
             },
         });
     }, []);
@@ -24,11 +24,11 @@ export default function GASPAnimation() {
                     </div>)
                     } else {
                         if (i === 1 || i === 2) {
-                            return <div className="word text-sky-200" key={i}>
+                            return <div className="word drop-shadow-[0_3px_5px_rgba(255,255,0,0.6)]" key={i}>
                             {word}
                         </div>
                         } else {
-                            return (<div className="word" key={i}>
+                            return (<div className="word drop-shadow-[0_2px_2px_rgba(0,0,0,1)]" key={i}>
                             {word}
                         </div>)
                         }
