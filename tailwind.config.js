@@ -12,7 +12,7 @@ module.exports = {
       fontFamily: { 
         "MaShanZheng": ['MaShanZheng', 'sans-serif'] 
     } 
-    },
+    }, 
   },
   plugins: [],
 }
