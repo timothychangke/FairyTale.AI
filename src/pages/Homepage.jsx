@@ -12,13 +12,11 @@ import Select from 'react-select';
 import '../Modal.css';
 import DropDown from '../components/Dropdown';
 
-
-const API_KEY = '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';
+const API_KEY = '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';
 const openai = new OpenAI({
     apiKey: API_KEY,
     dangerouslyAllowBrowser: true,
 });
-
 
 export default function Homepage() {
     const [buttonState, setButtonState] = useState('button');
@@ -42,7 +40,11 @@ export default function Homepage() {
 
     useEffect(() => {
         let SUBTITLE_MAX_LENGTH;
-        if (selectedOption.value === 'zh-CN' || selectedOption === 'ko' || selectedOption === 'ta-IN') {
+        if (
+            selectedOption.value === 'zh-CN' ||
+            selectedOption === 'ko' ||
+            selectedOption === 'ta-IN'
+        ) {
             SUBTITLE_MAX_LENGTH = 10;
             if (transcript.length > SUBTITLE_MAX_LENGTH + lastIndex) {
                 setLastIndex(transcript.length);
@@ -54,10 +56,10 @@ export default function Homepage() {
                 setLastIndex(finalTranscript.length);
             }
             setSubtitles(transcript.slice(lastIndex));
+        }
     }, [transcript, subtitles, finalTranscript]);
 
     useEffect(() => {
-  
         if (finalTranscript.length - start > 100) {
             setStory([
                 ...story,
@@ -66,9 +68,7 @@ export default function Homepage() {
             setStart(finalTranscript.length);
             generateImage();
         }
-
     }, [finalTranscript, story]);
-    const [selectedOption, setSelectedOption] = useState('en-US');
 
     const options = [
         { value: 'en-US', label: 'English' },
@@ -77,7 +77,6 @@ export default function Homepage() {
         { value: 'ta-IN', label: 'Tamil தமிழ்' },
         { value: 'ko', label: 'Korean 한국어' },
     ];
-
 
     if (!browserSupportsSpeechRecognition) {
         return <span>Browser doesn't support speech recognition.</span>;
@@ -102,9 +101,7 @@ export default function Homepage() {
         }, 1000);
     };
 
-
     async function titleImage() {
-        const title = 'Humpty Dumpty';
         const response = await openai.images.generate({
             model: 'dall-e-2',
             prompt: `
@@ -115,19 +112,18 @@ export default function Homepage() {
             size: '1024x1024',
         });
         setUrl([...url, response.data[0].url.toString()]);
-        console.log(url);
+        console.log(response.data[0].url);
         setUrlTraverse(urlTraverse + 1);
     }
 
-
     const toggleModal = () => {
+        titleImage();
         setModal(!modal);
     };
 
     async function generateImage() {
         console.log('loading..');
         const text = story[count];
-        const title = 'Winnie the Pooh';
         setCount(count + 1);
         console.log(text);
         const response = await openai.images.generate({
@@ -147,11 +143,11 @@ export default function Homepage() {
         const toSet = urlTraverse > 1 ? urlTraverse - 1 : 0;
         setUrlTraverse(toSet);
     };
-    const goForward = () =>{
-        const toSet = urlTraverse < url.length ? urlTraverse + 1 : url.length -1
-        setUrlTraverse(toSet)
-    }
-
+    const goForward = () => {
+        const toSet =
+            urlTraverse < url.length ? urlTraverse + 1 : url.length - 1;
+        setUrlTraverse(toSet);
+    };
 
     return (
         <div>
@@ -192,7 +188,7 @@ export default function Homepage() {
                                 alt="footer"
                             />
                         </div>
-                        <div className="bg-[#a8d0fa]">
+                        {/* <div className="bg-[#a8d0fa]">
                             <Select
                                 className="color-[#a8d0fa] text-black"
                                 defaultValue={options[0]}
@@ -201,85 +197,87 @@ export default function Homepage() {
                                 isSearchable={true}
                                 placeholder={'English'}
                             ></Select>
-                        </div>
-                    </div>
-          
-            </div>
-            {modal && (
-                <div class={modal ? 'active-modal' : 'modal'}>
-                    <div class="overlay"></div>
-                    <div class="modal-content">
-                        <h2 className="text-3xl font-bold text-center mb-2">
-                            Welcome to FairyTale.AI
-                        </h2>
-                        <p className="m-1 mb-3">Before we begin story telling...</p>
-                        <div className='flex gap-12'>
-                        <div class='inputBox'>
-                            <input type='text' required value={title} onChange={(e) => setTitle(e.target.value)}/>
-                            <span>Story Title</span>
-                        </div>
-                        <div>
-                            <DropDown options={options} setSelectedOption={setSelectedOption}/>
-                        </div>
-                        </div>
-                        
-
-                        <button
-                            onClick={toggleModal}
-                            className="bg-white hover:opacity-90 transition-opacity text-indigo-600 font-semibold w-full py-2 rounded"
-                            type='submit'
-                        >
-                            Tell me a story!
-                        </button>
-                    </div>
-
-                    {urlTraverse != -1 && (
-                        <div style={{ height: '40px' }}>
-                            <span
-                                onClick={goBack}
-                                class="material-symbols-outlined"
-                            >
-                                arrow_back_ios
-                            </span>
-                            <img
-                                src={url[urlTraverse]}
-                                style={{ height: '70vh'}}
-                            />
-                            <span
-                                onClick={goForward}
-                                class="material-symbols-outlined"
-                            >
-                                arrow_forward_ios
-                            </span>
-                        </div>
-                    )}
-
-
-                    <div>
-                        <button onClick={generateImage}>
-                            <span>Try</span>
-                        </button>
-                    </div>
-                    {image && <img src={image} style={{height : "60vh"}} />}
-
-                    <div className="mt-auto max-w-full m-0 pt-96">
-                        {subtitles}
-                    </div>
-                    <div  className="mt-auto">
-                        <img src={footer}  className="max-w-full m-0 p-0 " />
-                    </div>
-                    <div className="bg-[#a8d0fa]">
-                        <Select
-                            className="color-[#a8d0fa] text-black"
-                            defaultValue={options[0]}
-                            onChange={setSelectedOption}
-                            options={options}
-                            isSearchable={true}
-                            placeholder={'English'}
-                        ></Select>
+                        </div> */}
                     </div>
                 </div>
-            )}
+                {modal && (
+                    <div class={modal ? 'active-modal' : 'modal'}>
+                        <div class="overlay"></div>
+                        <div class="modal-content">
+                            <h2 className="text-3xl font-bold text-center mb-2">
+                                Welcome to FairyTale.AI
+                            </h2>
+                            <p className="m-1 mb-3">
+                                Before we begin story telling...
+                            </p>
+                            <div className="flex gap-12">
+                                <div class="inputBox">
+                                    <input
+                                        type="text"
+                                        required
+                                        value={title}
+                                        onChange={(e) => {
+                                            setTitle(e.target.value);
+                                        }}
+                                    />
+                                    <span>Story Title</span>
+                                </div>
+                                <div>
+                                    <DropDown
+                                        options={options}
+                                        setSelectedOption={setSelectedOption}
+                                    />
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={toggleModal}
+                                className="bg-white hover:opacity-90 transition-opacity text-indigo-600 font-semibold w-full py-2 rounded"
+                                type="submit"
+                            >
+                                Tell me a story!
+                            </button>
+                        </div>
+
+                        {urlTraverse != -1 && (
+                            <div style={{ height: '40px' }}>
+                                <span
+                                    onClick={goBack}
+                                    class="material-symbols-outlined"
+                                >
+                                    arrow_back_ios
+                                </span>
+                                <img
+                                    src={url[urlTraverse]}
+                                    style={{ height: '70vh' }}
+                                />
+                                <span
+                                    onClick={goForward}
+                                    class="material-symbols-outlined"
+                                >
+                                    arrow_forward_ios
+                                </span>
+                            </div>
+                        )}
+                        <div className="mt-auto max-w-full m-0 pt-96">
+                            {subtitles}
+                        </div>
+                        {/* <div className="mt-auto">
+                            <img src={footer} className="max-w-full m-0 p-0 " />
+                        </div> */}
+                        {/* <div className="bg-[#a8d0fa]">
+                            <Select
+                                className="color-[#a8d0fa] text-black"
+                                defaultValue={options[0]}
+                                onChange={setSelectedOption}
+                                options={options}
+                                isSearchable={true}
+                                placeholder={'English'}
+                            ></Select>
+                        </div> */}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
