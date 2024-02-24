@@ -1,19 +1,47 @@
-import { useState, useEffect } from 'react';
+import { React, useState, useEffect } from 'react';
 import logo from '../assets/logo.png';
 import footer from '../assets/footer.png';
 import '../App.css';
 import GSAPAnimation from './GASPAnimation';
 import { AiOutlineAudio } from 'react-icons/ai';
 import { AiFillAudio } from 'react-icons/ai';
+import SpeechRecognition, {
+    useSpeechRecognition,
+} from 'react-speech-recognition';
 
 export default function Homepage() {
     const [buttonState, setButtonState] = useState('button');
     const [buttonText, setButtonText] = useState('Talk to me!');
+    const {
+        transcript,
+        resetTranscript,
+        browserSupportsSpeechRecognition,
+    } = useSpeechRecognition();
+    
+    if (!browserSupportsSpeechRecognition) {
+        return <span>Browser doesn't support speech recognition.</span>;
+    }
     const buttonClickHandler = () => {
         if (buttonText == 'Talk to me!') {
             setButtonText("I'm listening...");
+            resetTranscript();
+            console.log('listening start');
+            SpeechRecognition.startListening({
+                continuous: true,
+                language: 'en-US',
+            });
+           
+            
+        
         } else {
             setButtonText('Talk to me!');
+
+            SpeechRecognition.stopListening();
+            /*settranslated([...translatedtranscript, {'role': 'user', 'content':transcript}]);*/
+            console.log(transcript)
+                /*makeAPIRequest({'role': 'user', 'content':transcript});
+             
+                response_txt = response_txt.concat(translatedtranscript);*/
         }
         setButtonState('button animate');
         setTimeout(() => {
