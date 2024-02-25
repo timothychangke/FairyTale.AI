@@ -19,7 +19,6 @@ export default function GASPAnimation() {
         >
             <div className="d-flex">
                 {`FairyTale.AI`.split('').map((word, i) => {
-                    let text;
                     if (word === ' ') {
                         return (
                             <div className="word" key={i}>

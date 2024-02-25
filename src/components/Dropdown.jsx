@@ -24,6 +24,7 @@ const DropDown = ({ options, setSelectedOption}) => {
                     variants={wrapperVariants}
                     style={{ originY: 'top', translateX: '-50%' }}
                     className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] right-[-78%] w-48 overflow-hidden "
+                    required
                 >
                     {options.map((val) => (
                         <Option
@@ -99,7 +100,3 @@ const itemVariants = {
     },
 };
 
-const actionIconVariants = {
-    open: { scale: 1, y: 0 },
-    closed: { scale: 0, y: -7 },
-};

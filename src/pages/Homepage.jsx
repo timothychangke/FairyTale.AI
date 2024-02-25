@@ -8,11 +8,10 @@ import OpenAI from 'openai';
 import SpeechRecognition, {
     useSpeechRecognition,
 } from 'react-speech-recognition';
-import Select from 'react-select';
 import '../Modal.css';
 import DropDown from '../components/Dropdown';
 
-const API_KEY = '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';
+const API_KEY = process.env.REACT_APP_OPENAI_API_KEY;
 const openai = new OpenAI({
     apiKey: API_KEY,
     dangerouslyAllowBrowser: true,
@@ -23,7 +22,7 @@ export default function Homepage() {
     const [url, setUrl] = useState([]);
     const [urlTraverse, setUrlTraverse] = useState(-1);
     const [buttonText, setButtonText] = useState('Talk to me!');
-    const [story, setStory] = useState([])
+    const [story, setStory] = useState([]);
     const [count, setCount] = useState(0);
     const [subtitles, setSubtitles] = useState('');
     const [lastIndex, setLastIndex] = useState(0);
@@ -31,10 +30,7 @@ export default function Homepage() {
     const [selectedOption, setSelectedOption] = useState('en-US');
     const [modal, setModal] = useState(true);
     const [title, setTitle] = useState('');
-    var pinyin = require("chinese-to-pinyin");
-    const handleSelectedOption = (option) => {
-        setSelectedOption(option);
-      };
+    var pinyin = require('chinese-to-pinyin');
     let {
         transcript,
         resetTranscript,
@@ -61,7 +57,7 @@ export default function Homepage() {
             }
             setSubtitles(transcript.slice(lastIndex));
         }
-    }, [transcript, subtitles, finalTranscript]);
+    }, [transcript, subtitles, finalTranscript, lastIndex, selectedOption]);
 
     useEffect(() => {
         if (finalTranscript.length - start > 100) {
@@ -130,7 +126,9 @@ export default function Homepage() {
         console.log('loading..');
         const text = story[count];
         setCount(count + 1);
-        if (selectedOption.value=== 'zh-CN'){text = pinyin(text);}
+        if (selectedOption.value === 'zh-CN') {
+            text = pinyin(text);
+        }
         console.log(text);
         const response = await openai.images.generate({
             model: 'dall-e-2',
@@ -159,22 +157,11 @@ export default function Homepage() {
         setUrlTraverse(toSet);
     };
 
-    const imageStyles = {
-        maxHeight: '40vh',
-        width: 'auto',
-        margin: '0 auto', // Center the image horizontally
-    };
-
-    const arrowStyles = {
-        fontSize: '2rem', // Adjust the size of arrows
-        cursor: 'pointer', // Add cursor pointer for better UX
-    };
-
     return (
         <div>
             <div className="flex">
                 <div className="bg-[#a8d0fa] flex-1">
-                    <div className="flex flex-col items-center justify-center text-white h-screen p-0 ">
+                    <div className="flex flex-col items-center justify-center text-white h-screen p-0 max-w-max ">
                         <div className="flex space-x-1">
                             {!modal && <GSAPAnimation />}
                         </div>
@@ -200,38 +187,38 @@ export default function Homepage() {
                             </button>
                         </div>
                         {urlTraverse != -1 && (
-                            <div className='flex flex-row'>
-                                <div >
-                                    <span
-                                        onClick={goBack}
-                                        style={arrowStyles}
-                                        class="material-symbols-outlined"
-                                    >
-                                        arrow_back_ios
-                                    </span>
+
+                            <div className="flex items-center max-w-max max-h-60 z-10 gap-8 pt-64">
+                                <div
+                                    onClick={goBack}
+                                    class="material-symbols-outlined"
+                                >
+                                    arrow_back_ios
                                 </div>
-                                <div className="imageContainer">
+                                <div className="flex-1">
                                     <img
                                         src={url[urlTraverse]}
-                                        style={imageStyles}
                                         alt="Story Image"
+                                        className="p-0 m-0 h-[430px]"
                                     />
                                 </div>
-                                <div >
-                                    <span
-                                        onClick={goForward}
-                                        class="material-symbols-outlined"
-                                        style={arrowStyles}
-                                    >
-                                        arrow_forward_ios
-                                    </span>
+
+                                <div
+                                    onClick={goForward}
+                                    class="material-symbols-outlined"
+                                >
+                                    arrow_forward_ios
                                 </div>
                             </div>
                         )}
 
-                        <div className="mt-auto max-w-full m-0 pt-auto">
+                        <div className="mt-auto max-w-full m-0 relative top-28 text-xl text-white text-8vmin px-2vmin bg-slate-600 font-serif">
                             {subtitles}
                         </div>
+                        {/* <div class="font-sans font-normal text-white text-8vmin bg-black bg-opacity-40 py-2 px-2vmin rounded-4vmin">
+                            Your Content Here
+                        </div> */}
+
                         <div style={{ marginTop: '0px' }} className="mt-auto">
                             <img
                                 src={footer}
