@@ -1,70 +1,47 @@
-# Getting Started with Create React App
+# FAIRYTALE.AI
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
 
-In the project directory, you can run:
+https://github.com/timothychangke/FairyTale.AI/assets/101695218/40b33155-74e0-431e-9f8d-b01af59bd61d
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Motivation
+Imagine how much more enjoyable and visually stimulating our childhood would have been with vibrant, colorful, and lively pictures accompanying the stories our teachers read to us. Leveraging the power of AI, we aim to revolutionize this experience for the younger generation.
 
-### `npm test`
+## What it does
+FairyTale.ai enables educators to read stories or fairytales to children, with real-time subtitles displayed on our web application. Additionally, our platform generates child-friendly depictions of the storyline as the educator progresses, creating a magical storytelling experience.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## How we built it
+We developed the frontend website using ReactJS, Tailwind CSS, and Bootstrap. The audio-to-text transformation is powered by React's native speech recognition model, while OpenAI's Dall-E-3 image generation model produces images based on the text input in real-time.
 
-### `npm run build`
+## Possible applications
+Our application is designed for use in preschools and kindergartens to enhance cognitive development through visual stimulus. It can also support language learning by providing an engaging, visual experience. Furthermore, we aim to assist students with learning difficulties or language-based challenges by offering a multi-sensory approach to learning.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Challenges we ran into
+Selecting the ideal image generation model posed a significant challenge due to the market's diverse options. Despite considering alternatives like Google's Gemini, we settled on Dall-E-3 for its functionality, albeit with some inconsistencies.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Accomplishments that we're proud of
+Our team's ability to learn and adapt to various image generation models and prompt engineering techniques stands out as a significant achievement. We successfully translated our visions for the app into actionable prompts, demonstrating our proficiency in AI-driven development.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## What we learned
+Through this project, we gained insights into the evolving landscape of image generation technology and the importance of prompt engineering in achieving desired outcomes. We also honed our skills in striking the right balance between prompt detail and image consistency.
 
-### `npm run eject`
+## What's next for FairyTale.ai
+Future plans include expanding the app's functionalities to allow users to control the style and feel of generated images. We also aim to employ an ensemble of AI models for higher-quality image generation and cater to a broader customer base, including upper secondary and tertiary institutions.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Built With
+- Bootstrap
+- Dall-E
+- JavaScript
+- OpenAI
+- Reactjs
+- Speech Recognition
+- Tailwind
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## To run the project
+1. Download codebase into your local machine
+2. Run 'npm i' to install node modules
+3. Run 'npm start to run application in development mode
+4. Open [http://localhost:3000] to view it in your browser.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
