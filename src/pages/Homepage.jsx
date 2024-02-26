@@ -51,7 +51,7 @@ export default function Homepage() {
             }
             setSubtitles(transcript.slice(lastIndex));
         } else {
-            SUBTITLE_MAX_LENGTH = 30;
+            SUBTITLE_MAX_LENGTH = 20;
             if (finalTranscript.length > SUBTITLE_MAX_LENGTH + lastIndex) {
                 setLastIndex(finalTranscript.length);
             }
@@ -65,6 +65,7 @@ export default function Homepage() {
                 ...story,
                 finalTranscript.slice(start, finalTranscript.length),
             ]);
+            console.log(finalTranscript.slice(start, finalTranscript.length));
             setStart(finalTranscript.length);
             generateImage();
         }
@@ -105,7 +106,7 @@ export default function Homepage() {
 
     async function titleImage() {
         const response = await openai.images.generate({
-            model: 'dall-e-2',
+            model: 'dall-e-3',
             prompt: `
             Create a cartoon image for childrens' viewing of {title}. Each hue is carefully chosen to evoke feelings of happiness, warmth, and wonder, captivating young hearts with their vibrant allure
             Amidst the vibrancy and color, the characters retain their essence while being immersed in the joyous world of {title}.
@@ -124,16 +125,17 @@ export default function Homepage() {
 
     async function generateImage() {
         console.log('loading..');
-        const text = story[count];
+        console.log(story);
+        console.log(count);
+        console.log(story[count - 1]);
+        const text = story[count - 1];
         setCount(count + 1);
         if (selectedOption.value === 'zh-CN') {
             text = pinyin(text);
         }
-        console.log(text);
         const response = await openai.images.generate({
-            model: 'dall-e-2',
-            prompt: `Create a cartoon image for childrens' viewing of {title} based on the {text}.Each hue is carefully chosen to evoke feelings of happiness, warmth, and wonder, captivating young hearts with their vibrant allure
-            Amidst the vibrancy and color, the characters retain their essence while being immersed in the joyous world of {title}.
+            model: 'dall-e-3',
+            prompt: `Create a cartoon image for childrens' viewing of {title} based on {text}.All images are to evoke feelings and emotions of the text provided. The characters retain their essence while being immersed in the world of {title}. Make sure the pictures are engaging to children. Do not have any words in the image.
             title: ${title}
             text: ${text}`,
             n: 1,
@@ -144,18 +146,17 @@ export default function Homepage() {
         setUrlTraverse(urlTraverse + 1);
     }
 
-    function goBack () {
+    function goBack() {
         const toSet = urlTraverse > 1 ? urlTraverse - 1 : 0;
         setUrlTraverse(toSet);
-        console.log("hi")
-    };
+        console.log('hi');
+    }
 
     function goForward() {
-        console.log(url)
-        const toSet =
-            urlTraverse < url.length ? urlTraverse + 1 : urlTraverse;
+        console.log(url);
+        const toSet = urlTraverse < url.length ? urlTraverse + 1 : urlTraverse;
         setUrlTraverse(toSet);
-    };
+    }
 
     return (
         <div>
@@ -187,7 +188,6 @@ export default function Homepage() {
                             </button>
                         </div>
                         {urlTraverse != -1 && (
-
                             <div className="flex items-center max-w-max max-h-60 z-10 gap-8 pt-64">
                                 <div
                                     onClick={goBack}
